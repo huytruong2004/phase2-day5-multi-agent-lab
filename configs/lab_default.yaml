@@ -1,7 +1,7 @@
 lab:
   name: multi-agent-research-lab
-  max_iterations: 6
-  timeout_seconds: 60
+  max_iterations: 8
+  timeout_seconds: 180
 
 agents:
   supervisor:
