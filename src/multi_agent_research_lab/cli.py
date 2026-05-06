@@ -136,10 +136,19 @@ def benchmark(
     _init()
     cfg = yaml.safe_load(config_path.read_text())
     queries: list[str] = cfg["benchmark"]["queries"]
+    lab_cfg = cfg.get("lab", {})
     console.print(f"[bold]Benchmarking {len(queries)} queries[/bold]")
 
     traces_dir = out_path.parent / "traces"
-    results = _run_with_options(queries, traces_dir, llm_routing, critic, langsmith)
+    results = _run_with_options(
+        queries,
+        traces_dir,
+        llm_routing,
+        critic,
+        langsmith,
+        max_iterations=lab_cfg.get("max_iterations"),
+        timeout_seconds=lab_cfg.get("timeout_seconds"),
+    )
 
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(render_run_report(results), encoding="utf-8")
@@ -173,6 +182,9 @@ def _run_with_options(
     llm_routing: bool,
     critic: bool,
     langsmith: bool,
+    *,
+    max_iterations: int | None = None,
+    timeout_seconds: int | None = None,
 ) -> BenchmarkResults:
     """Like benchmark.run_benchmark but with workflow-level options threaded through."""
 
@@ -204,6 +216,8 @@ def _run_with_options(
                 trace_writer=sink,
                 use_llm_routing=llm_routing,
                 use_critic=critic,
+                max_iterations=max_iterations,
+                timeout_seconds=timeout_seconds,
             )
             started = perf_counter()
             workflow.run(m_state)
