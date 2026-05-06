@@ -18,7 +18,15 @@ agents:
     temperature: 0.4
 
 benchmark:
+  # Mixed query set:
+  # - First 2 are "parametric" — well-trodden topics where GPT-4o-mini's
+  #   training data already saturates the answer; baseline is expected to win.
+  # - Last 3 are "retrieval-required" — post-knowledge-cutoff or niche; if the
+  #   multi-agent system has any structural edge over the baseline, this is
+  #   where it should show up, since baseline has nothing to lean on.
   queries:
     - "Research GraphRAG state-of-the-art and write a 500-word summary"
-    - "Compare single-agent and multi-agent workflows for customer support"
     - "Summarize production guardrails for LLM agents"
+    - "What features were added in LangGraph 1.0 and how do they differ from 0.2?"
+    - "Summarize Anthropic's Claude Sonnet 4.5 release and its benchmark results"
+    - "Compare DeepSeek R1 and OpenAI o1 on reasoning benchmarks"
